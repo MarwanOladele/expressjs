@@ -20,7 +20,48 @@ app.post("/api/people", (req, res) => {
   if (!name) {
     return res.status(404).json({ success: false, msg: "imput a value" });
   }
-  res.status(201).json({ sucess: true, person: [...people, {id: 7, name}] });
+  res.status(201).json({ sucess: true, person: [...people, { id: 7, name }] });
+});
+
+app.put("/api/people/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const person = people.find((person) => person.id === Number(id));
+
+  if (!person) {
+    return res
+      .status(404)
+      .json({ success: false, msg: `no person with id ${id}` });
+  }
+
+  const newPeople = people.map((person) => {
+    if (person.id === Number(id)) {
+      person.name = name;
+    }
+    return person;
+  });
+  res.status(200).json({
+    success: true,
+    data: newPeople,
+  });
+});
+
+app.delete("/api/people/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const person = people.find((person) => person.id === Number(id));
+
+  if (!person) {
+    return res
+      .status(404)
+      .json({ success: false, msg: `no person with id ${id}` });
+  }
+
+  const newPeople = people.filter((person) => person.id !== Number(id));
+  res.status(200).json({
+    success: true,
+    data: [...newPeople],
+  });
 });
 
 app.post("/login", (req, res) => {
